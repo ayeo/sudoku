@@ -1,7 +1,7 @@
 import scalafx.application.JFXApp
+
 import scala.collection.mutable.Seq
-import scalafx.stage.Stage
-import scalafx.event.{ActionEvent, EventTarget}
+import scalafx.event.ActionEvent
 import scalafx.scene.Scene
 import scalafx.scene.control.Button
 import scalafx.scene.layout.{BorderPane, GridPane}
@@ -31,24 +31,21 @@ object Window extends JFXApp {
   solveButton.setText("Solve")
   mainPane.setBottom(solveButton)
   solveButton.onAction = (event: ActionEvent) => {
-    val x: Vector[Int] =
-      for (
-        x <- cells.toVector;
-        y <- x.toVector
-      ) yield {
+    val all: Vector[Int] =
+      for (x <- cells.toVector; y <- x.toVector) yield {
         if (y.getText().isEmpty) 0
         else y.getText().toInt
       }
-    val y = x.sliding(9).toVector
-    println(y)
+    val sliced = all.sliding(9, 9).toVector
+    println(sliced.map(_.mkString(" ")).mkString("\n"))
   }
 
-  (1 to 9).foreach(row => {
-    (1 to 9).foreach(column => {
+  (0 to 8).foreach(row => {
+    (0 to 8).foreach(column => {
       val btn = new Button()
-      cells(column-1)(row-1) = btn
-      if (board(column - 1)(row - 1) > 0) {
-        btn.setText(board(column - 1)(row - 1).toString())
+      cells(column)(row) = btn
+      if (board(column)(row ) > 0) {
+        btn.setText(board(column)(row).toString())
       }
 
       btn.setMinSize(40, 40)
