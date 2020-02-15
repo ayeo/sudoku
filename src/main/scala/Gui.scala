@@ -8,7 +8,7 @@ import scalafx.scene.layout.{BorderPane, GridPane}
 import scalafx.Includes._
 import scalafx.scene.input.KeyEvent
 
-object Window extends JFXApp {
+object Gui extends JFXApp {
   val cells = Array.ofDim[Button](9, 9)
   val board: Seq[Seq[Int]] = Seq(
     Seq(8, 0, 0, 0, 0, 7, 0, 9, 0),
@@ -37,7 +37,17 @@ object Window extends JFXApp {
         else y.getText().toInt
       }
     val sliced = all.sliding(9, 9).toVector
-    println(sliced.map(_.mkString(" ")).mkString("\n"))
+    val result = Solver.solve(sliced)
+
+    (0 to 8).foreach(row => {
+      (0 to 8).foreach(column => {
+        val x = result match {
+          case Some(value) => value(column)(row)
+          case None => "-"
+        }
+        cells(column)(row).setText(x.toString)
+      })
+    })
   }
 
   (0 to 8).foreach(row => {
