@@ -4,7 +4,7 @@ import scala.collection.mutable.Seq
 import scalafx.event.ActionEvent
 import scalafx.scene.Scene
 import scalafx.scene.control.Button
-import scalafx.scene.layout.{BorderPane, GridPane}
+import scalafx.scene.layout.{BorderPane, GridPane, HBox}
 import scalafx.Includes._
 import scalafx.scene.input.KeyEvent
 
@@ -25,19 +25,30 @@ object Gui extends JFXApp {
   val mainPane: BorderPane = new BorderPane()
   val scene: Scene = new Scene(mainPane, 500, 500)
   val pane: GridPane = new GridPane()
+  //pane.setStyle("-fx-background-color: black;")
   mainPane.setCenter(pane)
+
+  val menu = new HBox()
+  mainPane.setBottom(menu)
+
+  val clearButton = new Button()
+  clearButton.setText("Clear")
+  menu.children.add(clearButton)
+  clearButton.onAction = (event: ActionEvent) => {
+    for (x <- cells; y <- x) y.setText("")
+  }
 
   val solveButton = new Button()
   solveButton.setText("Solve")
-  mainPane.setBottom(solveButton)
+  menu.children.add(solveButton)
   solveButton.onAction = (event: ActionEvent) => {
     val all: Vector[Int] =
       for (x <- cells.toVector; y <- x.toVector) yield {
-        if (y.getText().isEmpty) 0
+        if (y.getText().isEmpty()) 0
         else y.getText().toInt
       }
     val sliced = all.sliding(9, 9).toVector
-    val result = Solver.solve(sliced)
+    val result = Solver.solve(sliced) //todo: run in in thread
 
     (0 to 8).foreach(row => {
       (0 to 8).foreach(column => {
@@ -63,7 +74,12 @@ object Gui extends JFXApp {
       btn.setId(s"cell_${row * column}")
       pane.add(btn, row, column)
       btn.onKeyPressed = (event: KeyEvent) => {
-        btn.setText(event.getText())
+        val given: Char = event.getText.toCharArray()(0)
+        if (given.isDigit) {
+          btn.setText(given.toString)
+        } else {
+          btn.setText("")
+        }
       }
     })
   })
