@@ -5,10 +5,9 @@ import scalafx.scene.control.Button
 import scalafx.scene.layout.{BorderPane, GridPane, Pane}
 import scalafx.scene.paint.Color
 import scalafx.scene.Scene
-import scala.collection.mutable.Seq
 
 object BoardBuilder {
-  type Board = Seq[Seq[Int]]
+  type Board = Vector[Vector[Int]]
   val cells = Array.ofDim[Button](9, 9)
 
   def buildBoard(data: Board, cellSize: Int, borderSize: Int): Pane = {
@@ -59,13 +58,12 @@ object BoardBuilder {
 
 object Loader {
   def load(filename: String): BoardBuilder.Board = {
-    var board: BoardBuilder.Board = Seq()
     val bufferedSource = io.Source.fromFile(s"resources/${filename}")
-    for (line <- bufferedSource.getLines) {
-      var row = Seq[Int]()
-      for (digit <- line.split(",").map(_.trim)) row = row :+ digit.toInt
-      board = board :+ row
-    }
+    val digits: Iterator[Int] = for (
+      line <- bufferedSource.getLines;
+      digit <- line.split(",").map(_.trim)
+    ) yield digit.toInt
+    val board: BoardBuilder.Board = digits.toVector.sliding(9, 9).toVector
     bufferedSource.close
 
     return board
@@ -73,13 +71,12 @@ object Loader {
 }
 
 object Grid extends JFXApp {
-
-  val board: BoardBuilder.Board = Loader.load("sample.txt")
-
   val mainPane: BorderPane = new BorderPane()
   val scene: Scene = new Scene(mainPane, 400, 400)
+  val board: BoardBuilder.Board = Loader.load("sample.txt")
+
   mainPane.padding = Insets(10, 10, 10, 10)
-  mainPane.setCenter(BoardBuilder.buildBoard(board, 40, 1))
+  mainPane.setCenter(BoardBuilder.buildBoard(board, 50, 1))
 
   stage = new JFXApp.PrimaryStage
   stage.setScene(scene)
