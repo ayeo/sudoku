@@ -1,10 +1,15 @@
+import Grid.{board, mainPane}
 import scalafx.application.JFXApp
+import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.control.Button
 import scalafx.scene.layout.{BorderPane, GridPane, Pane}
 import scalafx.scene.paint.Color
 import scalafx.scene.Scene
+import scalafx.Includes._
+
+import scala.util.Random
 
 object BoardBuilder {
   type Board = Vector[Vector[Int]]
@@ -64,19 +69,42 @@ object Loader {
       digit <- line.split(",").map(_.trim)
     ) yield digit.toInt
     val board: BoardBuilder.Board = digits.toVector.sliding(9, 9).toVector
-    bufferedSource.close
+
 
     return board
   }
+
+  def loadRandomPuzzle: BoardBuilder.Board = {
+    val data = io.Source.fromFile("resources/easy.txt")
+    val (x, y) = data.getLines.duplicate
+    val position = Random.nextInt(x.size)
+    val result = y.toStream.drop(position).headOption.get.toVector
+    val xxx = for (digit <- result) yield digit.toChar match {
+      case '.' => 0
+      case _ => digit.toInt - 48
+    }
+    data.close
+    xxx.sliding(9, 9).toVector
+  }
 }
+
 
 object Grid extends JFXApp {
   val mainPane: BorderPane = new BorderPane()
   val scene: Scene = new Scene(mainPane, 400, 400)
-  val board: BoardBuilder.Board = Loader.load("sample.txt")
+  val board: BoardBuilder.Board = Loader.loadRandomPuzzle
 
   mainPane.padding = Insets(10, 10, 10, 10)
-  mainPane.setCenter(BoardBuilder.buildBoard(board, 50, 1))
+  mainPane.setCenter(BoardBuilder.buildBoard(board, 40, 1))
+
+  val newGame = new Button()
+  newGame.setText("New game")
+  mainPane.setRight(newGame)
+  newGame.onAction = (event: ActionEvent) => {
+    val board: BoardBuilder.Board = Loader.loadRandomPuzzle
+    mainPane.setCenter(BoardBuilder.buildBoard(board, 40, 1))
+  }
+
 
   stage = new JFXApp.PrimaryStage
   stage.setScene(scene)
