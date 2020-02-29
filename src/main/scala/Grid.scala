@@ -17,7 +17,7 @@ object BoardBuilder {
 
     pane.padding = Insets(borderSize, borderSize, borderSize, borderSize)
     boardPane.setCenter(pane)
-    boardPane.children.add(BoardBuilder.buildCanvas(cellSize, borderSize))
+    boardPane.children.add(BoardBuilder.buildGrid(cellSize, borderSize))
     (0 to 8).foreach(row => {
       (0 to 8).foreach(column => {
         val btn = new Button()
@@ -37,7 +37,7 @@ object BoardBuilder {
     return boardPane
   }
 
-  private def buildCanvas(size: Int, borderSize: Int): Canvas = {
+  private def buildGrid(size: Int, borderSize: Int): Canvas = {
     val canvas = new Canvas(9 * size + 2 * borderSize, 9 * size + 2 * borderSize)
     val gc = canvas.graphicsContext2D
     gc.stroke = Color.Black
@@ -57,18 +57,24 @@ object BoardBuilder {
   }
 }
 
+object Loader {
+  def load(filename: String): BoardBuilder.Board = {
+    var board: BoardBuilder.Board = Seq()
+    val bufferedSource = io.Source.fromFile(s"resources/${filename}")
+    for (line <- bufferedSource.getLines) {
+      var row = Seq[Int]()
+      for (digit <- line.split(",").map(_.trim)) row = row :+ digit.toInt
+      board = board :+ row
+    }
+    bufferedSource.close
+
+    return board
+  }
+}
+
 object Grid extends JFXApp {
-  val board: BoardBuilder.Board = Seq(
-    Seq(8, 0, 0, 0, 0, 7, 0, 9, 0),
-    Seq(0, 7, 0, 0, 2, 0, 0, 0, 8),
-    Seq(0, 0, 9, 6, 0, 0, 5, 0, 0),
-    Seq(0, 0, 5, 3, 0, 0, 9, 0, 0),
-    Seq(0, 1, 0, 0, 8, 0, 0, 0, 2),
-    Seq(6, 0, 0, 0, 0, 4, 0, 0, 0),
-    Seq(3, 0, 0, 0, 0, 0, 0, 1, 0),
-    Seq(0, 4, 0, 0, 0, 0, 0, 0, 7),
-    Seq(0, 0, 7, 0, 0, 0, 3, 0, 0)
-  )
+
+  val board: BoardBuilder.Board = Loader.load("sample.txt")
 
   val mainPane: BorderPane = new BorderPane()
   val scene: Scene = new Scene(mainPane, 400, 400)
