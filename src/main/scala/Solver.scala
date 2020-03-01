@@ -1,9 +1,5 @@
-/**
-  * This is highly inspired by https://gist.github.com/pathikrit/a32e17832296befd6b94
-  * Actually only main recurssion block is changed for better readability
-  *
-  * See also excellent Computerphile video https://www.youtube.com/watch?v=G_UYXzGuqvM
-  */
+package pl.ayeo.sudoku
+
 object Solver {
   val n = 9
   val s = Math.sqrt(n).toInt

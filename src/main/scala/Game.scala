@@ -1,3 +1,5 @@
+package pl.ayeo.sudoku
+
 import scalafx.application.JFXApp
 import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
@@ -6,7 +8,7 @@ import scalafx.scene.layout.BorderPane
 import scalafx.scene.Scene
 import scalafx.Includes._
 
-object Grid extends JFXApp {
+object Game extends JFXApp {
   val mainPane: BorderPane = new BorderPane()
   val scene: Scene = new Scene(mainPane, 400, 400)
 

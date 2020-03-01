@@ -1,3 +1,5 @@
+package pl.ayeo.sudoku
+
 import scala.util.Random
 
 class Loader(level: Levels.Level) {

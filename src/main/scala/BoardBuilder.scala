@@ -1,3 +1,5 @@
+package pl.ayeo.sudoku
+
 import scalafx.geometry.Insets
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.control.Button
