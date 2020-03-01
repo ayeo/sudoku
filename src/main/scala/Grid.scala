@@ -1,4 +1,3 @@
-import Grid.{board, mainPane}
 import scalafx.application.JFXApp
 import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
@@ -75,8 +74,8 @@ object BoardBuilder {
 }
 
 class Loader(level: String) { //todo: level as enum
-  val data = io.Source.fromFile(s"resources/${level}.txt")
-  val puzzles = data.getLines.toList
+  private val data = io.Source.fromFile(s"resources/${level}.txt")
+  private val puzzles = data.getLines.toList
   data.close
 
   def loadRandomPuzzle: BoardBuilder.Board = {
@@ -101,7 +100,7 @@ object Grid extends JFXApp {
     val board: BoardBuilder.Board = loader.loadRandomPuzzle
     mainPane.setCenter(BoardBuilder.buildBoard(board, 40, 1))
   }
-  
+
   stage = new JFXApp.PrimaryStage
   stage.setScene(scene)
   stage.show()
