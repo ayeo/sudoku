@@ -74,33 +74,22 @@ object BoardBuilder {
   }
 }
 
-object Loader {
-//  def load(filename: String): BoardBuilder.Board = {
-//    val bufferedSource = io.Source.fromFile(s"resources/${filename}")
-//    val digits: Iterator[Int] = for (
-//      line <- bufferedSource.getLines;
-//      digit <- line.split(",").map(_.trim)
-//    ) yield digit.toInt
-//    val board: BoardBuilder.Board = digits.toVector.sliding(9, 9).toVector
-//
-//
-//    return board
-//  }
+class Loader(level: String) { //todo: level as enum
+  val data = io.Source.fromFile(s"resources/${level}.txt")
+  val puzzles = data.getLines.toList
+  data.close
 
   def loadRandomPuzzle: BoardBuilder.Board = {
-    val data = io.Source.fromFile("resources/easy.txt")
-    val (x, y) = data.getLines.duplicate
-    val board = y.drop(Random.nextInt(x.size)).next.toVector.map(_.toInt - 48).sliding(9, 9).toVector
-    data.close
-
-    return board
+    puzzles.drop(Random.nextInt(puzzles.size)).head.toVector.map(_.toInt - 48).sliding(9, 9).toVector
   }
 }
 
 object Grid extends JFXApp {
   val mainPane: BorderPane = new BorderPane()
   val scene: Scene = new Scene(mainPane, 400, 400)
-  val board: BoardBuilder.Board = Loader.loadRandomPuzzle
+
+  val loader = new Loader("easy")
+  val board: BoardBuilder.Board = loader.loadRandomPuzzle
 
   mainPane.padding = Insets(10, 10, 10, 10)
   mainPane.setCenter(BoardBuilder.buildBoard(board, 40, 1))
@@ -109,11 +98,10 @@ object Grid extends JFXApp {
   newGame.setText("New game")
   mainPane.setRight(newGame)
   newGame.onAction = (event: ActionEvent) => {
-    val board: BoardBuilder.Board = Loader.loadRandomPuzzle
+    val board: BoardBuilder.Board = loader.loadRandomPuzzle
     mainPane.setCenter(BoardBuilder.buildBoard(board, 40, 1))
   }
-
-
+  
   stage = new JFXApp.PrimaryStage
   stage.setScene(scene)
   stage.show()
