@@ -26,20 +26,26 @@ object BoardBuilder {
         cells(column)(row) = btn
         if (data(column)(row ) > 0) {
           btn.setText(data(column)(row).toString())
+          btn.getStyleClass.add("hard")
         }
         btn.onKeyPressed = (event: KeyEvent) => {
-          val given: Char = event.getText.toCharArray()(0)
-          if (given.isDigit) {
-            btn.setText(given.toString)
-          } else {
-            btn.setText("")
+          val colIndex: Int = GridPane.getColumnIndex(btn)
+          val rowIndex: Int = GridPane.getRowIndex(btn)
+          if (data(rowIndex)(colIndex) == 0) {
+            val given: Char = event.getText.toCharArray()(0)
+            if (given.isDigit) {
+              btn.setText(given.toString)
+            } else {
+              btn.setText("")
+            }
           }
         }
 
         btn.setMinSize(cellSize, cellSize)
         btn.setMaxSize(cellSize, cellSize)
-        btn.setStyle(s"-fx-background-color: #FFFFFF; -fx-font-size: ${(cellSize/2.2).toInt};")
+        btn.setStyle(s"-fx-font-size: ${(cellSize/2.2).toInt};")
         btn.setId(s"cell_${row * column}")
+        btn.getStyleClass.add("default")
         pane.add(btn, row, column)
       })
     })

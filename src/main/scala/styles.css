@@ -1,0 +1,16 @@
+.root {
+    -fx-background-color: lightblue;
+}
+
+.button.default {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #AAAAAA;
+}
+
+.button.default:focused {
+    -fx-background-color: #EEEEEE;
+}
+
+.button.default.hard {
+    -fx-text-fill: #000000;
+}

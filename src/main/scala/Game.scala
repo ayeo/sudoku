@@ -11,6 +11,7 @@ import scalafx.Includes._
 object Game extends JFXApp {
   val mainPane: BorderPane = new BorderPane()
   val scene: Scene = new Scene(mainPane, 400, 400)
+  scene.getStylesheets.add("styles.css")
   val loader = new Loader(Levels.EASY)
 
   def loadNewBoard(): Unit = {
