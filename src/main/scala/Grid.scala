@@ -73,10 +73,17 @@ object BoardBuilder {
   }
 }
 
-class Loader(level: String) { //todo: level as enum
-  private val data = io.Source.fromFile(s"resources/${level}.txt")
-  private val puzzles = data.getLines.toList
-  data.close
+class Loader(private val level: String) { //todo: level as enum
+
+  private val puzzles = init
+
+  private def init(): List[String] = {
+    val data = io.Source.fromFile(s"resources/${level}.txt")
+    val result = data.getLines.toList
+    data.close
+
+    return result
+  }
 
   def loadRandomPuzzle: BoardBuilder.Board = {
     puzzles.drop(Random.nextInt(puzzles.size)).head.toVector.map(_.toInt - 48).sliding(9, 9).toVector
