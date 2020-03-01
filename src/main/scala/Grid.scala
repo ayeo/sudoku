@@ -42,7 +42,7 @@ object BoardBuilder {
 
         btn.setMinSize(cellSize, cellSize)
         btn.setMaxSize(cellSize, cellSize)
-        btn.setStyle(s"-fx-background-color: #FFFFFF; -fx-font-size: ${cellSize/2};")
+        btn.setStyle(s"-fx-background-color: #FFFFFF; -fx-font-size: ${(cellSize/2.2).toInt};")
         btn.setId(s"cell_${row * column}")
         pane.add(btn, row, column)
       })
