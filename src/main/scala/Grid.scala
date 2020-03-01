@@ -73,11 +73,10 @@ object BoardBuilder {
   }
 }
 
-class Loader(private val level: String) { //todo: level as enum
+class Loader(level: String) { //todo: level as enum
+  private lazy val puzzles = init(level)
 
-  private val puzzles = init
-
-  private def init(): List[String] = {
+  private def init(level: String): List[String] = {
     val data = io.Source.fromFile(s"resources/${level}.txt")
     val result = data.getLines.toList
     data.close
