@@ -8,6 +8,7 @@ import scalafx.scene.layout.{BorderPane, GridPane, Pane}
 import scalafx.scene.paint.Color
 import scalafx.scene.Scene
 import scalafx.Includes._
+import scalafx.scene.input.KeyEvent
 
 import scala.util.Random
 
@@ -22,12 +23,22 @@ object BoardBuilder {
     pane.padding = Insets(borderSize, borderSize, borderSize, borderSize)
     boardPane.setCenter(pane)
     boardPane.children.add(BoardBuilder.buildGrid(cellSize, borderSize))
+
+
     (0 to 8).foreach(row => {
       (0 to 8).foreach(column => {
         val btn = new Button()
         cells(column)(row) = btn
         if (data(column)(row ) > 0) {
           btn.setText(data(column)(row).toString())
+        }
+        btn.onKeyPressed = (event: KeyEvent) => {
+          val given: Char = event.getText.toCharArray()(0)
+          if (given.isDigit) {
+            btn.setText(given.toString)
+          } else {
+            btn.setText("")
+          }
         }
 
         btn.setMinSize(cellSize, cellSize)
@@ -57,37 +68,34 @@ object BoardBuilder {
       gc.strokeLine(borderSize, size * 3 * row + borderSize, size * 9 + borderSize, size * 3 * row + borderSize)
     })
 
+    canvas.setMouseTransparent(true)
+
     return canvas
   }
 }
 
 object Loader {
-  def load(filename: String): BoardBuilder.Board = {
-    val bufferedSource = io.Source.fromFile(s"resources/${filename}")
-    val digits: Iterator[Int] = for (
-      line <- bufferedSource.getLines;
-      digit <- line.split(",").map(_.trim)
-    ) yield digit.toInt
-    val board: BoardBuilder.Board = digits.toVector.sliding(9, 9).toVector
-
-
-    return board
-  }
+//  def load(filename: String): BoardBuilder.Board = {
+//    val bufferedSource = io.Source.fromFile(s"resources/${filename}")
+//    val digits: Iterator[Int] = for (
+//      line <- bufferedSource.getLines;
+//      digit <- line.split(",").map(_.trim)
+//    ) yield digit.toInt
+//    val board: BoardBuilder.Board = digits.toVector.sliding(9, 9).toVector
+//
+//
+//    return board
+//  }
 
   def loadRandomPuzzle: BoardBuilder.Board = {
     val data = io.Source.fromFile("resources/easy.txt")
     val (x, y) = data.getLines.duplicate
-    val position = Random.nextInt(x.size)
-    val result = y.toStream.drop(position).headOption.get.toVector
-    val xxx = for (digit <- result) yield digit.toChar match {
-      case '.' => 0
-      case _ => digit.toInt - 48
-    }
+    val board = y.drop(Random.nextInt(x.size)).next.toVector.map(_.toInt - 48).sliding(9, 9).toVector
     data.close
-    xxx.sliding(9, 9).toVector
+
+    return board
   }
 }
-
 
 object Grid extends JFXApp {
   val mainPane: BorderPane = new BorderPane()
