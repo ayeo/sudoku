@@ -12,7 +12,7 @@ class Loader(level: Levels.Level) {
       data.close
       Some(result)
     } catch {
-      case _ => None
+      case _: Throwable => None
     }
   }
 
