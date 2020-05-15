@@ -1,4 +1,4 @@
-§§§package pl.ayeo.sudoku
+package pl.ayeo.sudoku
 
 import scalafx.Includes._
 import scalafx.geometry.Insets
