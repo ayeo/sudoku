@@ -7,12 +7,7 @@ import scalafx.Includes._
 
 object Handler {
   def handleNewInput(painter: Gui)(state: State)(event: KeyEvent): Unit = {
-      val btn: Button = event.getSource().asInstanceOf[Button]
-      val colIndex: Int = GridPane.getColumnIndex(btn)
-      val rowIndex: Int = GridPane.getRowIndex(btn)
-      val newDigit = event.getCode.getName.toInt
-
-      painter.print(state.placeNumber(colIndex, rowIndex, newDigit))
+      painter.print(state.placeNumber(event.getCode.getName.toInt))
   }
 
   def handleClick(painter: Gui)(state: State)(event: MouseEvent): Unit = {

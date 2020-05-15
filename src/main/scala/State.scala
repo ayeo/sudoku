@@ -18,8 +18,8 @@ case class State(given: Board, user: Board, solution: Board, showErrors: Boolean
     }.sum == 0
   }
 
-  def placeNumber(row: Int, col: Int, number: Int): State = {
-    val newUser: Board = this.user.updated(col, this.user(col).updated(row, number))
+  def placeNumber(number: Int): State = {
+    val newUser: Board = this.user.updated(focus._2, this.user(focus._2).updated(focus._1, number))
     State(given, newUser, solution, showErrors, focus)
   }
 
@@ -31,6 +31,9 @@ case class State(given: Board, user: Board, solution: Board, showErrors: Boolean
 
     State(given, filteredSolution, solution, showErrors, focus)
   }
+
+  def hint: State = placeNumber(solution(focus._2)(focus._1))
+
 
   def setFocus(row: Int, col: Int): State = State(given, user, solution, showErrors, (row, col))
 

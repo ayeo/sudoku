@@ -17,11 +17,16 @@ class Gui(boardPrinter: BoardPrinter) {
   val newGame = new Button()
   newGame.setText("New game")
 
+  val hint = new Button()
+  hint.setText("Hint")
+
   val showErrors = new CheckBox("Show errors");
 
   val buttonsPane = new VBox();
-  buttonsPane.getChildren().add(solve)
+
   buttonsPane.getChildren().add(newGame)
+  buttonsPane.getChildren().add(hint)
+  buttonsPane.getChildren().add(solve)
   buttonsPane.getChildren().add(showErrors);
   mainPane.setRight(buttonsPane)
 
@@ -38,18 +43,15 @@ class Gui(boardPrinter: BoardPrinter) {
     print(state)
   }
 
-  def toggleErrors(state: State)(event: ActionEvent): Unit = {
-    print(state.showErrors(showErrors.isSelected))
-  }
-
-  def solveBoard(state: State)(event: ActionEvent): Unit = {
-    print(state.solve)
-  }
+  def toggleErrors(state: State)(event: ActionEvent): Unit = print(state.showErrors(showErrors.isSelected))
+  def solveBoard(state: State)(event: ActionEvent): Unit = print(state.solve)
+  def showHint(state: State)(event: ActionEvent): Unit = print(state.hint)
 
   def print(state: State): Unit = {
     solve.onAction = solveBoard(state)
     showErrors.onAction = toggleErrors(state)
     newGame.onAction = (event: ActionEvent) => loadNewBoard()
+    hint.onAction = showHint(state)
     boardPrinter.printBoard(state, this)
   }
 }
