@@ -67,6 +67,8 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
     btn.setMaxSize(cellSize, cellSize)
     btn.setStyle(s"-fx-font-size: ${(cellSize/2.2).toInt};")
     btn.getStyleClass.add("default")
+    if (row == focus._2) btn.getStyleClass.add("highlight")
+    if (column == focus._1) btn.getStyleClass.add("highlight")
     pane.add(btn, column, row)
     if (focus == (column, row)) {
       btn.requestFocus();

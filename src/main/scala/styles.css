@@ -1,5 +1,5 @@
 .root {
-    -fx-background-color: lightblue;
+    #-fx-background-color: lightblue;
 }
 
 .button.default {
@@ -8,6 +8,10 @@
 }
 
 .button.default:focused {
+    -fx-background-color: #CCCCCC;
+}
+
+.button.highlight {
     -fx-background-color: #EEEEEE;
 }
 
