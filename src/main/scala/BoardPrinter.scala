@@ -27,6 +27,9 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
       pane.getRowConstraints().add(con)
     }
 
+    val focusedDigit = state.getFocusedDigit
+    println(focusedDigit)
+
     for ( //already filled by user
       (value, row: Int) <- state.user.zipWithIndex;
       (digit: Int, column: Int) <- value.zipWithIndex.filter { case (d, _) => d > 0 }
@@ -36,7 +39,7 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
       btn.onMouseClicked = Handler.handleClick(gui)(state)
       btn.setText(digit.toString)
       if (state.showErrors && state.solution(row)(column) != digit) btn.getStyleClass.add("error")
-      addButton(btn, column, row, state.focus)
+      addButton(btn, column, row, state.focus, focusedDigit)
     }
 
     for ( //empty cells
@@ -47,7 +50,7 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
       btn.onKeyPressed = Handler.handleNewInput(gui)(state)
       btn.onMouseClicked = Handler.handleClick(gui)(state)
       btn.setText("")
-      addButton(btn, column, row, state.focus)
+      addButton(btn, column, row, state.focus, focusedDigit)
     }
 
     for ( //given numbers (unchangeable)
@@ -58,15 +61,16 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
       btn.setText(digit.toString)
       btn.onMouseClicked = Handler.handleClick(gui)(state)
       btn.getStyleClass.add("hard")
-      addButton(btn, column, row, state.focus)
+      addButton(btn, column, row, state.focus, focusedDigit)
     }
   }
 
-  private def addButton(btn: Button, column: Int, row: Int, focus: (Int, Int)): Unit = {
+  private def addButton(btn: Button, column: Int, row: Int, focus: (Int, Int), focusedDigit: Int): Unit = {
     btn.setMinSize(cellSize, cellSize)
     btn.setMaxSize(cellSize, cellSize)
     btn.setStyle(s"-fx-font-size: ${(cellSize/2.2).toInt};")
     btn.getStyleClass.add("default")
+    if (!btn.getText.isEmpty && btn.getText.toInt == focusedDigit) btn.getStyleClass.add("highlight2")
     if (row == focus._2) btn.getStyleClass.add("highlight")
     if (column == focus._1) btn.getStyleClass.add("highlight")
     pane.add(btn, column, row)

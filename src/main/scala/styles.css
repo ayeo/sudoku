@@ -8,11 +8,15 @@
 }
 
 .button.default:focused {
-    -fx-background-color: #CCCCCC;
+    -fx-background-color: #999999;
 }
 
 .button.highlight {
-    -fx-background-color: #EEEEEE;
+    -fx-background-color: #DDDDDD;
+}
+
+.button.highlight2 {
+    -fx-background-color: #BBBBBB;
 }
 
 .button.default.hard {

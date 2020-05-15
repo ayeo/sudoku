@@ -18,6 +18,14 @@ case class State(given: Board, user: Board, solution: Board, showErrors: Boolean
     }.sum == 0
   }
 
+  def getFocusedDigit: Int = {
+    given.flatten.zip(user.flatten).map {
+      case (0, i) if i > 0 => i
+      case (i, 0) if i > 0 => i
+      case _ => 0
+    }.sliding(size, size).toVector(focus._2)(focus._1)
+  }
+
   def placeNumber(number: Int): State = {
     val newUser: Board = this.user.updated(focus._2, this.user(focus._2).updated(focus._1, number))
     State(given, newUser, solution, showErrors, focus)
