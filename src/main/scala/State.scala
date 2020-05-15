@@ -2,7 +2,7 @@ package pl.ayeo.sudoku
 
 import Domain.Board
 
-case class State(given: Board, user: Board, focus: (Int, Int) = (0, 0)) {
+case class State(given: Board, user: Board, solution: Board, showErrors: Boolean = false,focus: (Int, Int) = (0, 0)) {
   val size = 9
 
   if (!check(given, user)) {
@@ -20,19 +20,21 @@ case class State(given: Board, user: Board, focus: (Int, Int) = (0, 0)) {
 
   def placeNumber(row: Int, col: Int, number: Int): State = {
     val newUser: Board = this.user.updated(col, this.user(col).updated(row, number))
-    State(given, newUser, focus)
+    State(given, newUser, solution, showErrors, focus)
   }
 
-  def solve(solution: Board): State = {
+  def solve: State = {
     val filteredSolution = solution.flatten.zip(given.flatten).map {
       case (i, 0) if i > 0 => i
       case _ => 0
     }.sliding(size, size).toVector
 
-    State(given, filteredSolution, focus)
+    State(given, filteredSolution, solution, showErrors, focus)
   }
 
-  def setFocus(row: Int, col: Int): State = State(given, user, (row, col))
+  def setFocus(row: Int, col: Int): State = State(given, user, solution, showErrors, (row, col))
+
+  def showErrors(show: Boolean): State = State(given, user, solution, show, focus)
 
   def emptyCells(): Board = {
     given.flatten.zip(user.flatten).map {

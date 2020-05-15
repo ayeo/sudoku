@@ -17,7 +17,7 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
 
   def getPane(): Pane = boardPane
 
-  def printBoard(state: State): Unit = {
+  def printBoard(state: State, gui: Gui): Unit = {
     pane.getChildren.clear()
 
     (0 to 9).foreach { _ =>
@@ -32,9 +32,10 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
       (digit: Int, column: Int) <- value.zipWithIndex.filter { case (d, _) => d > 0 }
     ) {
       val btn = new Button()
-      btn.onKeyPressed = Handler.handleNewInput(this)(state)
-      btn.onMouseClicked = Handler.handleClick(this)(state)
+      btn.onKeyPressed = Handler.handleNewInput(gui)(state)
+      btn.onMouseClicked = Handler.handleClick(gui)(state)
       btn.setText(digit.toString)
+      if (state.showErrors && state.solution(row)(column) != digit) btn.getStyleClass.add("error")
       addButton(btn, column, row, state.focus)
     }
 
@@ -43,8 +44,8 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
       (_, column: Int) <- value.zipWithIndex.filter { case (d, _) => d > 0 }
     ) {
       val btn = new Button()
-      btn.onKeyPressed = Handler.handleNewInput(this)(state)
-      btn.onMouseClicked = Handler.handleClick(this)(state)
+      btn.onKeyPressed = Handler.handleNewInput(gui)(state)
+      btn.onMouseClicked = Handler.handleClick(gui)(state)
       btn.setText("")
       addButton(btn, column, row, state.focus)
     }
@@ -55,7 +56,7 @@ class BoardPrinter(cellSize: Int, borderSize: Int) {
     ) {
       val btn = new Button()
       btn.setText(digit.toString)
-      btn.onMouseClicked = Handler.handleClick(this)(state)
+      btn.onMouseClicked = Handler.handleClick(gui)(state)
       btn.getStyleClass.add("hard")
       addButton(btn, column, row, state.focus)
     }

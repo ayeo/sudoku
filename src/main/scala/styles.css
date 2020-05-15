@@ -14,3 +14,7 @@
 .button.default.hard {
     -fx-text-fill: #000000;
 }
+
+.button.default.error {
+    -fx-text-fill: #ff0000;
+}
